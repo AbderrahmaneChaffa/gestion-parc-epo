@@ -20,19 +20,15 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // Créer un utilisateur Support
-        $user = User::factory()->create([
-            'name' => 'Support EPO',
-            'email' => 'support@epo.dz',
-            'password' => bcrypt('password'),
-        ]);
+        // $user = User::factory()->create([
+        //     'name' => 'Support EPO',
+        //     'email' => 'support@epo.dz',
+        //     'password' => bcrypt('password'),
+        // ]);
+        // 2. Créer 15 équipements différents
+        Equipement::factory(15)->create();
 
-        // Créer des équipements
-        Equipement::create([
-            'designation' => 'PC Portable Dell',
-            'categorie' => 'Informatique',
-            'quantite_en_stock' => 20,
-            'seuil_alerte' => 5,
-            'user_id' => $user->id,
-        ]);
+        // 3. Créer 30 mouvements d'entrées/sorties
+        Equipement::factory(30)->create();
     }
 }

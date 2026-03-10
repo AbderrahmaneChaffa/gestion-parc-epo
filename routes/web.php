@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipementController;
 use App\Http\Controllers\MovementController;
 use App\Http\Controllers\ProfileController;
@@ -8,23 +9,23 @@ use App\Models\Movement;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboard', function () {
-    // Récupérer les équipements en alerte
-    $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')->get();
-    // Les 5 derniers mouvements pour l'historique
-    $derniersMouvements = Movement::with('equipment')->latest()->take(5)->get();
+//     // Récupérer les équipements en alerte
+//     $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')->get();
+//     // Les 5 derniers mouvements pour l'historique
+//     $derniersMouvements = Movement::with('equipment')->latest()->take(5)->get();
 
-    return view('dashboard', compact('alertesStock', 'derniersMouvements'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+//     return view('dashboard', compact('alertesStock', 'derniersMouvements'));
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('equipments', EquipementController::class);
+    Route::resource('equipements', EquipementController::class);
     Route::resource('movements', MovementController::class);
 });
 

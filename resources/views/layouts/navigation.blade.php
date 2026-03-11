@@ -19,8 +19,8 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                         {{ __('Tableau de bord') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipments.*')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
-                        {{ __('Catalogue du parc') }}
+                    <x-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipements.*')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                        {{ __('Equipements') }}
                     </x-nav-link>
                     <x-nav-link :href="route('movements.create')" :active="request()->routeIs('movements.*')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                         {{ __('Nouvelle entrée/sortie') }}
@@ -91,8 +91,8 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
                 {{ __('Tableau de bord') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipments.*')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-                {{ __('Catalogue du parc') }}
+            <x-responsive-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipements.*')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
+                {{ __('Equipements') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('movements.create')" :active="request()->routeIs('movements.*')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
                 {{ __('Nouvelle entrée/sortie') }}

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Catalogue du Parc Informatique</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Equipements</h2>
             <a href="{{ route('equipements.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm">Ajouter un matériel</a>
         </div>
     </x-slot>

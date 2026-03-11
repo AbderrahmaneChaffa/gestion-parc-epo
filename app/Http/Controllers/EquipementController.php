@@ -8,22 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EquipementController extends Controller
 {
-    
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     //
-    // }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     //
-    // }
 
     /**
      * Store a newly created resource in storage.
@@ -84,27 +69,29 @@ class EquipementController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
+
     public function edit(Equipement $equipement)
     {
-        //
+        return view('equipements.edit', compact('equipement'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Equipement $equipement)
     {
-        //
+        $validated = $request->validate([
+            'designation' => 'required|string|max:255',
+            'categorie' => 'required|string',
+            'seuil_alerte' => 'required|integer|min:0',
+        ]);
+
+        $equipement->update($validated);
+
+        return redirect()->route('equipements.index')->with('success', 'Matériel mis à jour.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Equipement $equipement)
     {
-        //
+        $equipement->delete();
+        return redirect()->route('equipements.index')->with('success', 'Matériel supprimé.');
     }
 }

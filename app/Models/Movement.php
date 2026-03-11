@@ -10,7 +10,7 @@ class Movement extends Model
 {
     use HasFactory, Notifiable;
     protected $table = 'movements';
-    protected $fillable = ['equipment_id', 'type', 'quantite', 'direction_concernee', 'motif_ou_reference', 'date_mouvement', 'user_id'];
+    protected $fillable = ['equipement_id', 'type', 'quantite', 'direction_concernee', 'motif_ou_reference', 'date_mouvement', 'user_id'];
 
     public function equipement()
     {

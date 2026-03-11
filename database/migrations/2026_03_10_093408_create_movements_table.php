@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('movements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('equipment_id')->constrained('equipements')->cascadeOnDelete();
+            $table->foreignId('equipement_id')->constrained('equipements')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained(); // Ajoute la colonne user_id
             $table->enum('type', ['entree', 'sortie']);
             $table->integer('quantite');

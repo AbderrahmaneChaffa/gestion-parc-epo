@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         // Créer un utilisateur Support
-        // $user = User::factory()->create([
-        //     'name' => 'Support EPO',
-        //     'email' => 'support@epo.dz',
-        //     'password' => bcrypt('password'),
-        // ]);
+        $user = User::factory()->create([
+            'name' => 'Support EPO',
+            'email' => 'support@epo.dz',
+            'password' => bcrypt('password'),
+        ]);
         // 2. Créer 15 équipements différents
         Equipement::factory(15)->create();
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Equipement;
-use App\Models\Equipment;
 use App\Models\Movement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,14 +16,14 @@ class MovementController extends Controller
      */
     public function index()
     {
-        $movements = Movement::with(['equipment', 'user'])->latest()->get();
+        $movements = Movement::with(['equipement', 'user'])->latest()->get();
         return view('movements.index', compact('movements'));
     }
 
     public function create()
     {
-        $equipments = Equipement::all();
-        return view('movements.create', compact('equipments'));
+        $equipements = Equipement::all();
+        return view('movements.create', compact('equipements'));
     }
 
     /**
@@ -32,7 +32,7 @@ class MovementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'equipment_id' => 'required|exists:equipments,id',
+            'equipement_id' => 'required|exists:equipements,id',
             'type' => 'required|in:entree,sortie',
             'quantite' => 'required|integer|min:1',
             'direction_concernee' => 'nullable|string',
@@ -40,23 +40,23 @@ class MovementController extends Controller
             'date_mouvement' => 'required|date',
         ]);
 
-        $equipment = Equipement::findOrFail($validated['equipment_id']);
+        $equipement = Equipement::findOrFail($validated['equipement_id']);
 
         // Vérification de sécurité pour les sorties
-        if ($validated['type'] === 'sortie' && $equipment->quantite_en_stock < $validated['quantite']) {
-            return back()->withErrors(['quantite' => 'Erreur : Stock insuffisant pour cette sortie ! (Disponible : ' . $equipment->quantite_en_stock . ')'])->withInput();
+        if ($validated['type'] === 'sortie' && $equipement->quantite_en_stock < $validated['quantite']) {
+            return back()->withErrors(['quantite' => 'Erreur : Stock insuffisant pour cette sortie ! (Disponible : ' . $equipement->quantite_en_stock . ')'])->withInput();
         }
 
-        DB::transaction(function () use ($validated, $equipment) {
+        DB::transaction(function () use ($validated, $equipement) {
             // Enregistrer le mouvement avec l'auteur (Support)
             $validated['user_id'] = Auth::id();
             Movement::create($validated);
 
             // Mise à jour de la quantité
             if ($validated['type'] === 'entree') {
-                $equipment->increment('quantite_en_stock', $validated['quantite']);
+                $equipement->increment('quantite_en_stock', $validated['quantite']);
             } else {
-                $equipment->decrement('quantite_en_stock', $validated['quantite']);
+                $equipement->decrement('quantite_en_stock', $validated['quantite']);
             }
         });
 

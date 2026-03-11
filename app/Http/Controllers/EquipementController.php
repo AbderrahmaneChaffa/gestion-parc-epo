@@ -8,21 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EquipementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     //
-    // }
+    
     /**
      * Display a listing of the resource.
      */

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipement;
 use App\Models\Movement;
 use Illuminate\Http\Request;
+use SweetAlert2\Laravel\Swal;
 
 class DashboardController extends Controller
 {
@@ -19,8 +20,8 @@ class DashboardController extends Controller
             ->orderBy('quantite_en_stock', 'asc')
             ->get();
 
-        // 3. Derniers mouvements avec relations (Equipment et User pour la traçabilité)
-        $derniersMouvements = Movement::with(['equipment', 'user'])
+        // 3. Derniers mouvements avec relations (Equipement et User pour la traçabilité)
+        $derniersMouvements = Movement::with(['equipement', 'user'])
             ->latest()
             ->take(10)
             ->get();

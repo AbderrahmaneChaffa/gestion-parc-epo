@@ -8,8 +8,8 @@
                 <div class="grid grid-cols-1 gap-6">
                     <div>
                         <label class="block font-medium text-sm text-gray-700">Équipement</label>
-                        <select name="equipment_id" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500" required>
-                            @foreach($equipments as $item)
+                        <select name="equipement_id" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500" required>
+                            @foreach($equipements as $item)
                             <option value="{{ $item->id }}">{{ $item->designation }} (Stock actuel: {{ $item->quantite_en_stock }})</option>
                             @endforeach
                         </select>

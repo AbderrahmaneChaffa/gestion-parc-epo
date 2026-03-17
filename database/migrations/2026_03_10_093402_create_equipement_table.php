@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('equipements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained(); // Ajoute la colonne user_id
-            $table->string('designation');
+            $table->string('designation')->unique();
             $table->string('categorie');
             $table->integer('quantite_en_stock')->default(0);
             $table->integer('seuil_alerte')->default(5);

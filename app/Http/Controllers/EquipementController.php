@@ -13,10 +13,24 @@ class EquipementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $equipements = Equipement::with('user')->latest()->get();
-        return view('equipements.index', compact('equipements'));
+        $search = $request->input('search');
+
+        // On commence la requête avec la relation user
+        $query = Equipement::with('user');
+
+        // Si une recherche est effectuée
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('designation', 'LIKE', "%{$search}%")
+                    ->orWhere('categorie', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $equipements = $query->latest()->paginate(10); // Ajout de la pagination pour plus de clarté
+
+        return view('equipements.index', compact('equipements', 'search'));
     }
 
     public function create()
@@ -44,13 +58,13 @@ class EquipementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'designation' => 'required|string|max:255',
+            'designation' => 'required|string|max:255|unique:equipements,designation',
             'categorie' => 'required|string',
             'seuil_alerte' => 'required|integer|min:0',
             'quantite_initiale' => 'required|integer|min:0',
         ]);
 
-        $equipment = Equipement::create([
+        $equipement = Equipement::create([
             'designation' => $validated['designation'],
             'categorie' => $validated['categorie'],
             'seuil_alerte' => $validated['seuil_alerte'],
@@ -79,7 +93,7 @@ class EquipementController extends Controller
     public function update(Request $request, Equipement $equipement)
     {
         $validated = $request->validate([
-            'designation' => 'required|string|max:255',
+            'designation' => 'required|string|max:255|unique:equipements,designation',
             'categorie' => 'required|string',
             'seuil_alerte' => 'required|integer|min:0',
         ]);

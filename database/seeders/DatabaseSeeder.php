@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Equipement;
 use App\Models\Equipment;
+use App\Models\Movement;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,9 +27,9 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         // 2. Créer 15 équipements différents
-        Equipement::factory(15)->create();
+        Equipement::factory(50)->create();
 
         // 3. Créer 30 mouvements d'entrées/sorties
-        Equipement::factory(30)->create();
+        Movement::factory(30)->create();
     }
 }

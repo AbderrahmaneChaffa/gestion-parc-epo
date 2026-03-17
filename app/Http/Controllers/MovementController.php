@@ -33,71 +33,36 @@ class MovementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'equipment_id' => 'required|exists:equipments,id',
+            'equipement_id' => 'required|exists:equipements,id',
             'type' => 'required|in:entree,sortie',
             'quantite' => 'required|integer|min:1',
-            'direction_concernee' => 'required_if:type,sortie|nullable|string|max:100',
-            'motif_ou_reference' => 'nullable|string|max:255',
-            'date_mouvement' => 'required|date|before_or_equal:today',
-        ], [
-            'direction_concernee.required_if' => 'La direction est obligatoire pour une sortie de matériel.',
+            'direction_concernee' => 'nullable|string',
+            'motif_ou_reference' => 'nullable|string',
+            'date_mouvement' => 'required|date',
         ]);
 
-        $equipment = Equipement::findOrFail($validated['equipment_id']);
+        $equipement = Equipement::findOrFail($validated['equipement_id']);
 
-        // Vérification de la disponibilité pour les sorties
-        if ($validated['type'] === 'sortie' && $equipment->quantite_en_stock < $validated['quantite']) {
-            return back()->withErrors(['quantite' => "Action impossible : Stock insuffisant (Disponible : $equipment->quantite_en_stock)."])->withInput();
+        // Vérification de sécurité pour les sorties
+        if ($validated['type'] === 'sortie' && $equipement->quantite_en_stock < $validated['quantite']) {
+            return back()->withErrors(['quantite' => 'Erreur : Stock insuffisant pour cette sortie ! (Disponible : ' . $equipement->quantite_en_stock . ')'])->withInput();
         }
 
-        // Utilisation d'une transaction pour la sécurité des données
-        DB::transaction(function () use ($validated, $equipment) {
-            // 1. Créer le mouvement avec l'ID de l'utilisateur connecté
-            Movement::create($validated + ['user_id' => Auth::id()]);
+        DB::transaction(function () use ($validated, $equipement) {
+            // Enregistrer le mouvement avec l'auteur (Support)
+            $validated['user_id'] = Auth::id();
+            Movement::create($validated);
 
-            // 2. Mettre à jour la quantité (Incrément ou Décrément)
+            // Mise à jour de la quantité
             if ($validated['type'] === 'entree') {
-                $equipment->increment('quantite_en_stock', $validated['quantite']);
+                $equipement->increment('quantite_en_stock', $validated['quantite']);
             } else {
-                $equipment->decrement('quantite_en_stock', $validated['quantite']);
+                $equipement->decrement('quantite_en_stock', $validated['quantite']);
             }
         });
 
-        return redirect()->route('dashboard')->with('success', 'Le mouvement a été enregistré et le stock mis à jour.');
+        return redirect()->route('dashboard')->with('success', 'Stock mis à jour avec succès.');
     }
-    // public function store(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'equipement_id' => 'required|exists:equipements,id',
-    //         'type' => 'required|in:entree,sortie',
-    //         'quantite' => 'required|integer|min:1',
-    //         'direction_concernee' => 'nullable|string',
-    //         'motif_ou_reference' => 'nullable|string',
-    //         'date_mouvement' => 'required|date',
-    //     ]);
-
-    //     $equipement = Equipement::findOrFail($validated['equipement_id']);
-
-    //     // Vérification de sécurité pour les sorties
-    //     if ($validated['type'] === 'sortie' && $equipement->quantite_en_stock < $validated['quantite']) {
-    //         return back()->withErrors(['quantite' => 'Erreur : Stock insuffisant pour cette sortie ! (Disponible : ' . $equipement->quantite_en_stock . ')'])->withInput();
-    //     }
-
-    //     DB::transaction(function () use ($validated, $equipement) {
-    //         // Enregistrer le mouvement avec l'auteur (Support)
-    //         $validated['user_id'] = Auth::id();
-    //         Movement::create($validated);
-
-    //         // Mise à jour de la quantité
-    //         if ($validated['type'] === 'entree') {
-    //             $equipement->increment('quantite_en_stock', $validated['quantite']);
-    //         } else {
-    //             $equipement->decrement('quantite_en_stock', $validated['quantite']);
-    //         }
-    //     });
-
-    //     return redirect()->route('dashboard')->with('success', 'Stock mis à jour avec succès.');
-    // }
 
     /**
      * Display the specified resource.

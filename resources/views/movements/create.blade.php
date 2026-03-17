@@ -23,7 +23,12 @@
                             </select>
                             <x-input-error :messages="$errors->get('equipement_id')" class="mt-2" />
                         </div>
+                        <div>
+                            <x-input-label for="date_mouvement" value="Date effective" />
+                            <x-text-input id="date_mouvement" name="date_mouvement" type="date" class="block mt-1 w-full" :value="old('date_mouvement', date('Y-m-d'))" required />
 
+
+                        </div>
                         <div class="flex gap-4">
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="type" value="entree" class="hidden peer" {{ old('type', 'entree') == 'entree' ? 'checked' : '' }}>
@@ -53,18 +58,53 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <x-input-label for="date_mouvement" value="Date effective" />
-                                <x-text-input id="date_mouvement" name="date_mouvement" type="date" class="block mt-1 w-full" :value="old('date_mouvement', date('Y-m-d'))" required />
-                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
 
                             <div>
                                 <x-input-label for="motif_ou_reference" value="Motif ou N° Référence (Bon de commande...)" />
-                                <x-text-input id="motif_ou_reference" name="motif_ou_reference" type="text" class="block mt-1 w-full" :value="old('motif_ou_reference')" />
-                            </div>
-                        </div>
+                                <span class="text-xs text-gray-500 italic">Cliquez sur un tag pour l'ajouter</span>
+                                <textarea id="motif_ou_reference" name="motif_ou_reference" rows="3"
+                                    class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('motif_ou_reference') }}</textarea>
 
+                            </div>
+                            <div>
+
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 py-1 px-2 rounded transition">
+                                        Nouvelle acquisition / Achat
+                                    </button>
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 py-1 px-2 rounded transition">
+                                        Remplacement suite à une panne
+                                    </button>
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 py-1 px-2 rounded transition">
+                                        Attribution à un nouvel employé
+                                    </button>
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-yellow-50 hover:bg-yellow-100 text-yellow-700 border border-yellow-200 py-1 px-2 rounded transition">
+                                        Retour matériel sous garantie
+                                    </button>
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 py-1 px-2 rounded transition">
+                                        Mise au rebut / Obsolescence
+                                    </button>
+                                </div>
+                                <script>
+                                    function fillMotif(button) {
+                                        const textarea = document.getElementById('motif_ou_reference');
+                                        const textToAdd = button.innerText.trim();
+
+                                        // Si le champ contient déjà du texte, on saute une ligne avant d'ajouter le motif
+                                        if (textarea.value.trim() !== '') {
+                                            textarea.value += '\n' + textToAdd;
+                                        } else {
+                                            textarea.value = textToAdd;
+                                        }
+
+                                        // On remet le focus sur le champ pour permettre au support d'ajouter une référence manuelle (ex: N° de bon)
+                                        textarea.focus();
+                                    }
+                                </script>
+                            </div>
+
+                        </div>
                         <div class="flex items-center justify-between border-t pt-6">
                             <span class="text-sm text-gray-500 italic">L'action sera signée par : <b>{{ auth()->user()->name }}</b></span>
                             <div class="flex gap-4">

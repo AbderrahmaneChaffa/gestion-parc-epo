@@ -6,23 +6,45 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mb-3 ">
+                <form action="{{ route('equipements.index') }}" method="GET" class="flex gap-2">
+                    <input type="text" name="search" value="{{ $search ?? '' }}"
+                        placeholder="Rechercher une désignation ou catégorie..."
+                        class="w-full md:w-1/3 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+
+                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition">
+                        Rechercher
+                    </button>
+
+                    @if($search)
+                    <a href="{{ route('equipements.index') }}" class="bg-red-100 text-red-700 px-4 py-2 rounded-md hover:bg-red-200 transition">
+                        Effacer
+                    </a>
+                    @endif
+                </form>
+
+            </div>
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-50 border-b">
+                            <th class="p-3">#</th>
                             <th class="p-3">Désignation</th>
                             <th class="p-3">Catégorie</th>
                             <th class="p-3 text-center">Stock Actuel</th>
                             <th class="p-3 text-center">Seuil Alerte</th>
                             <th class="p-3">Créé par</th>
+                            <th class="p-3">Derniere mise a jour</th>
                             <th class="p-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($equipements as $item)
                         <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-bold">{{ $loop->iteration }}</td>
                             <td class="p-3 font-bold">{{ $item->designation }}</td>
                             <td class="p-3 text-sm text-gray-600">{{ $item->categorie }}</td>
                             <td class="p-3 text-center">
@@ -32,6 +54,7 @@
                             </td>
                             <td class="p-3 text-center text-gray-500 font-mono">{{ $item->seuil_alerte }}</td>
                             <td class="p-3 text-xs italic">{{ $item->user->name }}</td>
+                            <td class="p-3 text-xs text-gray-400">{{ $item->updated_at->diffForHumans() }}</td>
                             <td class="p-3 flex space-x-2">
                                 <a href="{{ route('equipements.edit', $item) }}" class="text-blue-600 hover:underline">Modifier</a>
                                 <form action="{{ route('equipements.destroy', $item) }}" method="POST" onsubmit="return confirm('Supprimer ce matériel ?')">
@@ -43,7 +66,12 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <div class="mt-4">
+                    {{ $equipements->appends(['search' => $search])->links() }}
+                </div>
             </div>
+
         </div>
     </div>
 </x-app-layout>

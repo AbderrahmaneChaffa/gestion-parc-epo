@@ -18,7 +18,7 @@ class MovementFactory extends Factory
     public function definition(): array
     {
         return [
-            'equipment_id' => Equipement::pluck('id')->random(),
+            'equipement_id' => Equipement::pluck('id')->random(),
             'type' => $this->faker->randomElement(['entree', 'sortie']),
             'quantite' => $this->faker->numberBetween(1, 5),
             'direction_concernee' => $this->faker->randomElement(['RH', 'DFC', 'Capitainerie', 'DDN', 'DG', 'TC', 'DMA', 'Juridique', 'PFSO']),

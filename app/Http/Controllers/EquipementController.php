@@ -61,14 +61,14 @@ class EquipementController extends Controller
             'designation' => 'required|string|max:255|unique:equipements,designation',
             'categorie' => 'required|string',
             'seuil_alerte' => 'required|integer|min:0',
-            'quantite_initiale' => 'required|integer|min:0',
+            //'quantite_initiale' => 'required|integer|min:0',
         ]);
 
         $equipement = Equipement::create([
             'designation' => $validated['designation'],
             'categorie' => $validated['categorie'],
             'seuil_alerte' => $validated['seuil_alerte'],
-            'quantite_en_stock' => $validated['quantite_initiale'],
+            'quantite_en_stock' => 0, // Initialement à 0, sera mis à jour lors de l'ajout de mouvements
             'user_id' => Auth::id(), // Traçabilité de création
         ]);
 

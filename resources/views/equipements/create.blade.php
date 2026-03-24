@@ -15,18 +15,18 @@
                         <div>
                             <x-input-label for="categorie" value="Catégorie" />
                             <select name="categorie" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                <option value="Informatique">Informatique (PC, Serveur)</option>
-                                <option value="Périphérique">Périphérique (Écran, Souris)</option>
-                                <option value="Consommable">Consommable (Toner, Papier)</option>
-                                <option value="Réseau">Réseau (Switch, Routeur)</option>
+                                <option value="Informatique">Equipements</option>
+                                <option value="Périphérique">Périphérique</option>
+                                <option value="Consommable">Consommable </option>
+                                <option value="Réseau">Réseau</option>
                             </select>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
+                            <!-- <div>
                                 <x-input-label for="quantite_en_stock" value="Stock Initial" />
                                 <x-text-input id="quantite_en_stock" name="quantite_en_stock" type="number" class="mt-1 block w-full" value="0" required />
-                            </div>
+                            </div> -->
                             <div>
                                 <x-input-label for="seuil_alerte" value="Seuil d'Alerte" />
                                 <x-text-input id="seuil_alerte" name="seuil_alerte" type="number" class="mt-1 block w-full" value="5" required />

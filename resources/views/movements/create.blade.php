@@ -61,7 +61,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t pt-6">
 
                             <div>
-                                <x-input-label for="motif_ou_reference" value="Motif ou N° Référence (Bon de commande...)" />
+                                <x-input-label for="motif_ou_reference" value="Motif" />
                                 <span class="text-xs text-gray-500 italic">Cliquez sur un tag pour l'ajouter</span>
                                 <textarea id="motif_ou_reference" name="motif_ou_reference" rows="3"
                                     class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('motif_ou_reference') }}</textarea>
@@ -73,18 +73,21 @@
                                     <button type="button" onclick="fillMotif(this)" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 py-1 px-2 rounded transition">
                                         Nouvelle acquisition / Achat
                                     </button>
-                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 py-1 px-2 rounded transition">
+                                    <!-- <button type="button" onclick="fillMotif(this)" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 py-1 px-2 rounded transition">
                                         Remplacement suite à une panne
+                                    </button> -->
+                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 py-1 px-2 rounded transition">
+                                        Utiliser pour une panne
                                     </button>
                                     <button type="button" onclick="fillMotif(this)" class="text-xs bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 py-1 px-2 rounded transition">
-                                        Attribution à un nouvel employé
+                                        Besoin d'un utilisateur
                                     </button>
                                     <button type="button" onclick="fillMotif(this)" class="text-xs bg-yellow-50 hover:bg-yellow-100 text-yellow-700 border border-yellow-200 py-1 px-2 rounded transition">
-                                        Retour matériel sous garantie
+                                        Besoin d'un traveaux DDN
                                     </button>
-                                    <button type="button" onclick="fillMotif(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 py-1 px-2 rounded transition">
+                                    <!-- <button type="button" onclick="fillMotif(this)" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 py-1 px-2 rounded transition">
                                         Mise au rebut / Obsolescence
-                                    </button>
+                                    </button> -->
                                 </div>
                                 <script>
                                     function fillMotif(button) {

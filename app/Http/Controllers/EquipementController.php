@@ -15,6 +15,10 @@ class EquipementController extends Controller
      */
     public function index(Request $request)
     {
+        $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')
+            ->orderBy('quantite_en_stock', 'asc')
+            ->get();
+
         $search = $request->input('search');
 
         // On commence la requête avec la relation user
@@ -30,7 +34,7 @@ class EquipementController extends Controller
 
         $equipements = $query->latest()->paginate(10); // Ajout de la pagination pour plus de clarté
 
-        return view('equipements.index', compact('equipements', 'search'));
+        return view('equipements.index', compact('equipements', 'search', 'alertesStock'));
     }
 
     public function create()

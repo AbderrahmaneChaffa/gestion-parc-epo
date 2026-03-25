@@ -28,6 +28,42 @@
             </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <!-- @if($alertesStock->isNotEmpty())
+                <div id="alert-stock" class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-50 border border-red-300" role="alert">
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 me-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 11h4m-2-7a9 9 0 110 18 9 9 0 010-18z" />
+                            </svg>
+
+                            <h3 class="font-semibold text-red-800">
+                                ⚠ Stock critique détecté
+                            </h3>
+                        </div>
+
+                        <button onclick="document.getElementById('alert-stock').remove()"
+                            class="text-red-600 hover:text-red-900">
+                            ✕
+                        </button>
+                    </div>
+
+                    <div class="mt-3 mb-3">
+                        Les équipements suivants sont presque en rupture :
+                    </div>
+
+                    <ul class="list-disc ml-6">
+                        @foreach($alertesStock as $item)
+                        <li>
+                            <b>{{ $item->designation }}</b>
+                            (reste : <span class="font-semibold text-red-700">{{ $item->quantite_en_stock }}</span>)
+                        </li>
+                        @endforeach
+                    </ul>
+
+                </div>
+                @endif -->
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-50 border-b">

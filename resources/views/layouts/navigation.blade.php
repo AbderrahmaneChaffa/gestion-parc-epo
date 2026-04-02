@@ -1,79 +1,130 @@
-<nav x-data="{ open: false }" class="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200 shadow-sm">
-    <!-- Primary Navigation Menu -->
+<nav x-data="{ open: false, userOpen: false }" class="sticky top-0 z-40 bg-gradient-to-r from-cyan-800 via-teal-800 to-cyan-800 border-b border-cyan-700 shadow-lg backdrop-blur-xl bg-opacity-95">
+    <!-- Main Navigation Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-            <!-- Left Section: Logo & Links -->
-            <div class="flex items-center gap-8">
+        <div class="flex justify-between items-center h-20">
+
+            <!-- Left Section: Logo & Navigation Links -->
+            <div class="flex items-center gap-10">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="hover:opacity-80 transition-opacity duration-200">
+                <div class="shrink-0 flex items-center group">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 hover:opacity-90 transition-opacity duration-200">
                         <img
                             src="{{ asset('storage/Logo/logo_epo.png') }}"
                             alt="Logo EPO"
-                            class="block h-10 w-auto">
+                            class="block h-12 w-auto drop-shadow-md group-hover:drop-shadow-lg transition-all">
+                        <div class="hidden sm:flex flex-col">
+                            <span class="text-white font-bold text-sm">EPO</span>
+                            <span class="text-cyan-200 text-xs font-medium">Stock Tracker</span>
+                        </div>
                     </a>
                 </div>
 
                 <!-- Desktop Navigation Links -->
                 <div class="hidden lg:flex items-center gap-1">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
-                        {{ __('Tableau de bord') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipements.*')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
-                        {{ __('Equipements') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('movements.create')" :active="request()->routeIs('movements.*')" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
-                        {{ __('Nouvelle entrée/sortie') }}
-                    </x-nav-link>
+                    <!-- Dashboard Link -->
+                    <a href="{{ route('dashboard') }}" class="relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('dashboard') ? 'text-white bg-cyan-600/30 border border-cyan-400/50' : 'text-cyan-100 hover:text-white hover:bg-cyan-700/50' }}">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 4l4 2m-4-2l-4-2" />
+                            </svg>
+                            <span>Tableau de Bord</span>
+                        </div>
+                        @if(request()->routeIs('dashboard'))
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-300 to-cyan-400 rounded-full"></div>
+                        @endif
+                    </a>
+
+                    <!-- Equipements Link -->
+                    <a href="{{ route('equipements.index') }}" class="relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('equipements.*') ? 'text-white bg-cyan-600/30 border border-cyan-400/50' : 'text-cyan-100 hover:text-white hover:bg-cyan-700/50' }}">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg>
+                            <span>Équipements</span>
+                        </div>
+                        @if(request()->routeIs('equipements.*'))
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-300 to-cyan-400 rounded-full"></div>
+                        @endif
+                    </a>
+                    <!-- Movements Link -->
+                    <a href="{{ route('movements.index') }}" class="relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('movements.index') ? 'text-white bg-cyan-600/30 border border-cyan-400/50' : 'text-cyan-100 hover:text-white hover:bg-cyan-700/50' }}">
+                        <div class="flex items-center gap-2">
+                            <!-- <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                            </svg> -->
+                            <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 20V7m0 13-4-4m4 4 4-4m4-12v13m0-13 4 4m-4-4-4 4" />
+                            </svg>
+
+                            <span>Movements</span>
+                        </div>
+                        @if(request()->routeIs('movements.index'))
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-300 to-cyan-400 rounded-full"></div>
+                        @endif
+                    </a>
+                    <a href="{{ route('movements.create') }}" class="relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 {{ request()->routeIs('movements.create') ? 'text-white bg-cyan-600/30 border border-cyan-400/50' : 'text-cyan-100 hover:text-white hover:bg-cyan-700/50' }}">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Nouveau Mouvement</span>
+                        </div>
+                        @if(request()->routeIs('movements.create'))
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-300 to-cyan-400 rounded-full"></div>
+                        @endif
+                    </a>
                 </div>
             </div>
 
-            <!-- Right Section: User Menu -->
+            <!-- Right Section: User Menu & Mobile Button -->
             <div class="flex items-center gap-4">
                 <!-- Desktop User Dropdown -->
-                <div class="hidden sm:block">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
-                                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z" clip-rule="evenodd" />
-                                </svg>
-                                <span>{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                </svg>
-                            </button>
-                        </x-slot>
+                <div class="hidden sm:block relative" @click.away="userOpen = false">
+                    <button @click="userOpen = !userOpen" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-cyan-600 bg-cyan-700 hover:bg-cyan-600 text-white text-sm font-medium transition-all duration-300 hover:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-cyan-900 group">
+                        <div class="h-7 w-7 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-cyan-700 group-hover:ring-orange-400">
+                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                        </div>
+                        <span>{{ Auth::user()->name }}</span>
+                        <svg :class="{'rotate-180': userOpen}" class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </button>
 
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- User Dropdown Menu -->
+                    <div x-show="userOpen" x-transition class="absolute right-0 mt-2 w-56 rounded-xl bg-white border border-cyan-200 shadow-2xl overflow-hidden z-50">
+                        <!-- User Info Header -->
+                        <div class="px-4 py-4 bg-gradient-to-r from-cyan-600 to-teal-600">
+                            <p class="font-semibold text-white">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-blue-100 mt-1">{{ Auth::user()->email }}</p>
+                        </div>
+
+                        <!-- Menu Items -->
+                        <div class="py-2">
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 transition-colors duration-200 flex items-center gap-3 group">
+                                <svg class="w-4 h-4 text-gray-500 group-hover:text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                {{ __('Profil') }}
-                            </x-dropdown-link>
+                                <span>Paramètres du Profil</span>
+                            </a>
 
-                            <div class="border-t border-slate-200"></div>
+                            <div class="border-t border-cyan-200 my-2"></div>
 
                             <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();"
-                                    class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button type="submit" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-200 flex items-center gap-3 group">
+                                    <svg class="w-4 h-4 text-red-600 group-hover:text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
-                                    {{ __('Déconnexion') }}
-                                </x-dropdown-link>
+                                    <span>Déconnexion</span>
+                                </button>
                             </form>
-                        </x-slot>
-                    </x-dropdown>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button @click="open = !open" class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-slate-600 hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+                <button @click="open = !open" class="lg:hidden inline-flex items-center justify-center p-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-200">
                     <svg class="h-6 w-6" :class="{'hidden': open, 'block': !open}" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -86,37 +137,60 @@
     </div>
 
     <!-- Mobile Navigation Menu -->
-    <div :class="{'block': open, 'hidden': !open}" class="hidden lg:hidden bg-white border-t border-slate-200">
-        <div class="px-4 py-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-                {{ __('Tableau de bord') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('equipements.index')" :active="request()->routeIs('equipements.*')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-                {{ __('Equipements') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('movements.create')" :active="request()->routeIs('movements.*')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-                {{ __('Nouvelle entrée/sortie') }}
-            </x-responsive-nav-link>
+    <div :class="{'block': open, 'hidden': !open}" class="hidden lg:hidden bg-cyan-700 border-t border-cyan-600 backdrop-blur">
+        <div class="px-4 py-4 space-y-2">
+            <!-- Mobile Dashboard Link -->
+            <a href="{{ route('dashboard') }}" class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-cyan-600 text-white' : 'text-cyan-100 hover:bg-cyan-600 hover:text-white' }}">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-3m0 0l7-4 7 4M5 9v10a1 1 0 001 1h12a1 1 0 001-1V9m-9 4l4 2m-4-2l-4-2" />
+                    </svg>
+                    <span>Tableau de Bord</span>
+                </div>
+            </a>
+
+            <!-- Mobile Equipements Link -->
+            <a href="{{ route('equipements.index') }}" class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 {{ request()->routeIs('equipements.*') ? 'bg-cyan-600 text-white' : 'text-cyan-100 hover:bg-cyan-600 hover:text-white' }}">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    <span>Équipements</span>
+                </div>
+            </a>
+
+            <!-- Mobile Movements Link -->
+            <a href="{{ route('movements.create') }}" class="block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 {{ request()->routeIs('movements.*') ? 'bg-cyan-600 text-white' : 'text-cyan-100 hover:bg-cyan-600 hover:text-white' }}">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Nouveau Mouvement</span>
+                </div>
+            </a>
         </div>
 
         <!-- Mobile User Section -->
-        <div class="px-4 py-3 border-t border-slate-200 space-y-3">
-            <div>
-                <div class="font-semibold text-slate-900">{{ Auth::user()->name }}</div>
-                <div class="text-sm text-slate-500">{{ Auth::user()->email }}</div>
+        <div class="px-4 py-4 border-t border-cyan-600 space-y-3 bg-cyan-600/50">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-sm font-bold">
+                    {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                </div>
+                <div>
+                    <div class="font-semibold text-white text-sm">{{ Auth::user()->name }}</div>
+                    <div class="text-xs text-slate-400">{{ Auth::user()->email }}</div>
+                </div>
             </div>
 
-            <x-responsive-nav-link :href="route('profile.edit')" class="block px-3 py-2 rounded-lg text-base font-medium transition-colors duration-200">
-                {{ __('Profil') }}
-            </x-responsive-nav-link>
+            <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 rounded-lg text-sm font-medium text-cyan-100 hover:bg-cyan-500 hover:text-white transition-all duration-200">
+                {{ __('Paramètres du Profil') }}
+            </a>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-responsive-nav-link :href="route('logout')"
-                    onclick="event.preventDefault(); this.closest('form').submit();"
-                    class="block px-3 py-2 rounded-lg text-base font-medium text-red-600 transition-colors duration-200">
+                <button type="submit" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium text-red-300 hover:bg-red-600/50 hover:text-red-100 transition-all duration-200">
                     {{ __('Déconnexion') }}
-                </x-responsive-nav-link>
+                </button>
             </form>
         </div>
     </div>

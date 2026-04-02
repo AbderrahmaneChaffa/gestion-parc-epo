@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Equipement;
 use App\Models\Movement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,12 +15,97 @@ class MovementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     $movements = Movement::with(['equipement', 'user'])->latest()->get();
+    //     return view('movements.index', compact('movements'));
+    // }
+    /**
+     * Affiche la liste complète des mouvements avec filtres et recherche
+     */
+    public function index(Request $request)
     {
-        $movements = Movement::with(['equipement', 'user'])->latest()->get();
-        return view('movements.index', compact('movements'));
-    }
+        // ====== STATISTIQUES GLOBALES ======
+        $totalMouvements = Movement::count();
+        $totalEntrees = Movement::where('type', 'entree')->count();
+        $totalSorties = Movement::where('type', 'sortie')->count();
+        $mouvementsAujourdhui = Movement::whereDate('created_at', today())->count();
 
+        // ====== OPTIONS POUR LES FILTRES ======
+        // Récupérer les directions disponibles
+        $directions = Movement::distinct()->pluck('direction_concernee')->filter()->values()->toArray();
+
+        // Récupérer les catégories disponibles via les équipements
+        $categories = Equipement::distinct()->pluck('categorie')->filter()->values()->toArray();
+
+        // ====== CONSTRUCTION DE LA REQUÊTE DE BASE ======
+        $query = Movement::with(['equipement', 'user']);
+
+        // ====== FILTRAGE - Recherche ======
+        $search = $request->input('search');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('equipement', function ($subQ) use ($search) {
+                    $subQ->where('designation', 'LIKE', "%{$search}%")
+                        ->orWhere('reference', 'LIKE', "%{$search}%");
+                })
+                    ->orWhere('direction_concernee', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // ====== FILTRAGE - Type (Entrée/Sortie) ======
+        $type = $request->input('type');
+        if ($type && in_array($type, ['entree', 'sortie'])) {
+            $query->where('type', $type);
+        }
+
+        // ====== FILTRAGE - Direction ======
+        $direction = $request->input('direction');
+        if ($direction) {
+            $query->where('direction_concernee', $direction);
+        }
+
+        // ====== FILTRAGE - Catégorie (via équipement) ======
+        $category = $request->input('category');
+        if ($category) {
+            $query->whereHas('equipement', function ($q) use ($category) {
+                $q->where('categorie', $category);
+            });
+        }
+
+        // ====== FILTRAGE - Période ======
+        $period = $request->input('period');
+        if ($period) {
+            switch ($period) {
+                case 'today':
+                    $query->whereDate('date_mouvement', today());
+                    break;
+                case 'week':
+                    $query->whereBetween('date_mouvement', [
+                        Carbon::now()->startOfWeek(),
+                        Carbon::now()->endOfWeek()
+                    ]);
+                    break;
+                case 'month':
+                    $query->whereMonth('date_mouvement', Carbon::now()->month)
+                        ->whereYear('date_mouvement', Carbon::now()->year);
+                    break;
+            }
+        }
+
+        // ====== TRI ET PAGINATION ======
+        $mouvements = $query->latest('date_mouvement')->paginate(20);
+
+        return view('movements.index', compact(
+            'mouvements',
+            'totalMouvements',
+            'totalEntrees',
+            'totalSorties',
+            'mouvementsAujourdhui',
+            'directions',
+            'categories'
+        ));
+    }
     public function create()
     {
         $equipements = Equipement::all();

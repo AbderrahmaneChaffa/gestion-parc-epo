@@ -13,18 +13,51 @@ class EquipementController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function index(Request $request)
+    // {
+    //     $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')
+    //         ->orderBy('quantite_en_stock', 'asc')
+    //         ->get();
+
+    //     $search = $request->input('search');
+
+    //     // On commence la requête avec la relation user
+    //     $query = Equipement::with('user');
+
+    //     // Si une recherche est effectuée
+    //     if ($search) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('designation', 'LIKE', "%{$search}%")
+    //                 ->orWhere('categorie', 'LIKE', "%{$search}%");
+    //         });
+    //     }
+
+    //     $equipements = $query->latest()->paginate(10); // Ajout de la pagination pour plus de clarté
+
+    //     return view('equipements.index', compact('equipements', 'search', 'alertesStock'));
+    // }
     public function index(Request $request)
     {
-        $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')
-            ->orderBy('quantite_en_stock', 'asc')
-            ->get();
-
+        // Récupérer les paramètres de recherche et filtrage
         $search = $request->input('search');
+        $categorie = $request->input('categorie');
+        $stock_status = $request->input('stock_status');
+        // Categories 
+        $categories = Equipement::pluck('categorie')->unique()->filter();
 
-        // On commence la requête avec la relation user
+        // Récupérer les équipements en alerte (statut critique)
+        $alertesStock = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')
+            ->where('quantite_en_stock', '>', 0)  // Optionnel: exclure les ruptures totales
+            ->orderBy('quantite_en_stock', 'asc')
+            // ->limit(10)
+            ->get();
+        $enstockBon = Equipement::whereColumn('quantite_en_stock', '>', 'seuil_alerte')->count();
+        $enstockcritique = Equipement::whereColumn('quantite_en_stock', '<=', 'seuil_alerte')->count();
+
+        // Commencer la requête avec la relation user
         $query = Equipement::with('user');
 
-        // Si une recherche est effectuée
+        // FILTRAGE - Recherche par désignation ou référence
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('designation', 'LIKE', "%{$search}%")
@@ -32,11 +65,39 @@ class EquipementController extends Controller
             });
         }
 
-        $equipements = $query->latest()->paginate(10); // Ajout de la pagination pour plus de clarté
+        // FILTRAGE - Catégorie
+        if ($categorie && $categorie !== '') {
+            $query->where('categorie', $categorie);
+        }
 
-        return view('equipements.index', compact('equipements', 'search', 'alertesStock'));
+        // FILTRAGE - Statut du stock
+        // if ($stock_status && $stock_status !== '') {
+        //     if ($stock_status === 'critique') {
+        //         // Stock critique: quantité <= seuil d'alerte
+        //         $query->whereColumn('quantite_en_stock', '<=', 'seuil_alerte');
+        //     } elseif ($stock_status === 'bon') {
+        //         // Stock bon: quantité > seuil d'alerte
+        //         $query->whereColumn('quantite_en_stock', '>', 'seuil_alerte');
+        //     }
+        // }
+
+        // Tri et pagination
+        $equipements = $query
+            ->orderBy('designation', 'asc')
+            ->paginate(10)
+            ->appends($request->query()); // Préserver les filtres lors de la pagination
+
+        return view('equipements.index', compact(
+            'equipements',
+            'search',
+            'categorie',
+            'stock_status',
+            'alertesStock',
+            'categories',
+            'enstockBon',
+            'enstockcritique'
+        ));
     }
-
     public function create()
     {
         return view('equipements.create');
